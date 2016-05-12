@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <article class="col-sm-12 maincontent">
+        <h1>Wszyscy uczestnicy</h1>
+        <table class="table">
+          <thead>
+            <th>N.</th>
+            <th>Imię i nazwisko</th>
+            <th>Email</th>
+            <th>Szkoła</th>
+            <th>Punkty</th>
+            <th>Sum. il. war.</th>
+            <th>Il.Zak.War.</th>
+            <th>Informacje</th>
+            <th>List mot.</th>
+            <th>Status</th>
+          </thead>
+          <tbody>
+            {% for person in people %}
+            <tr>
+              <td>
+                {{ forloop.counter }}
+              </td>
+              <td>
+                <a href="{% url 'profile' person.user.id %}">
+                  {{ person.user.get_full_name }}
+                </a>
+              </td>
+              <td>
+                {{ person.user.email }}
+              </td>
+              <td>
+                {{ person.school }}
+              </td>
+              <td>
+                {{ person.points }}
+              </td>
+              <td>
+                {{ person.workshop_count }}
+              </td>
+              <td>
+                {{ person.accepted_workshop_count }}
+              </td>
+              <td>
+                {% for info in person.infos %}
+                  * {{ info }} <br>
+                {% endfor %}
+              </td>
+              <td>
+                {% load wwwtags %}
+                {{ person.has_letter|qualified_mark }}
+              </td>
+              <td>
+                {{ person.status }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </article>
+</div>
+{% endblock %}

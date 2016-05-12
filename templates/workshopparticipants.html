@@ -1,31 +1,61 @@
 {% extends "base.html" %}
 
 {% load bleach_tags %}
+{% load staticfiles %}
 
 {% block content %}
+
 <div class="container">
     <article class="col-sm-12 maincontent">
         <h1>{{ title }} &dash; uczestnicy</h1>
         <table class="table">
           <thead>
-            <th>Name</th>
+            <th>Numer</th>
+            <th>Imię i nazwisko</th>
             <th>Email</th>
+            <th>Ilość punktów</th>
+            <th>Komentarz</th>
+            <th>Zakwalifikowano</th>
           </thead>
           <tbody>
-            {% for participant in participants %}
+            {% for workshop_participant in workshop_participants %}
             <tr>
               <td>
-                <a href="{% url 'profile' participant.user.id %}">
-                  {{ participant.user.get_full_name }}
+                  {{ forloop.counter }}
+              </td>
+              <td>
+                <a href="{% url 'profile' workshop_participant.participant.user.id %}">
+                  {{ workshop_participant.participant.user.get_full_name }}
                 </a>
               </td>
               <td>
-                {{ participant.user.email }}
+                {{ workshop_participant.participant.user.email }}
+              </td>
+              <td>
+                <input type=number step=0.1
+                       value="{{ workshop_participant.qualification_result|default_if_none:'' }}"
+                       class="points-input"
+                       data-id="{{ workshop_participant.id }}">
+                <a href="#" class="save">Zapisz</a>
+              </td>
+              <td>
+                <input type=text
+                       value="{{ workshop_participant.comment|default_if_none:'' }}"
+                       class="comment-input"
+                       data-id="{{ workshop_participant.id }}">
+                <a href="#" class="savec">Zapisz</a>
+              </td>
+              <td class="qualified-mark">
+                {% load wwwtags %}
+                {{ workshop_participant.is_qualified|qualified_mark }}
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+        <div class="containter-fluid">
+          Maile: <input type="text" value="{% for workshop_participant in workshop_participants %}{{ workshop_participant.participant.user.email }} {% endfor %}" id="participants_emails">
+</div>
     </article>
 </div>
 {% endblock %}
